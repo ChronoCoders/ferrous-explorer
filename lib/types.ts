@@ -4,8 +4,11 @@ export interface ChainInfo {
   hashrate: number
   difficulty: number
   connections: number
+  nodes_online: number
   chain: string
   avg_block_time: number
+  supply_frr: number
+  blocks_to_halving: number
 }
 
 export interface BlockSummary {

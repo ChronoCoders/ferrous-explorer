@@ -100,7 +100,23 @@ export function StatsBar() {
           <StatCell label="PEERS" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
-              {stats?.connections?.toString() ?? '—'}
+              {stats?.nodes_online?.toString() ?? '—'}
+            </span>
+          </StatCell>
+
+          {/* SUPPLY */}
+          <StatCell label="SUPPLY" loading={loading}>
+            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+              className="text-sm font-medium text-[#f0ede8]">
+              {stats ? `${stats.supply_frr.toLocaleString(undefined, { maximumFractionDigits: 2 })} FRR` : '—'}
+            </span>
+          </StatCell>
+
+          {/* NEXT HALVING */}
+          <StatCell label="NEXT HALVING" loading={loading}>
+            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+              className="text-sm font-medium text-[#f0ede8]">
+              {stats ? `${stats.blocks_to_halving.toLocaleString()} blocks` : '—'}
             </span>
           </StatCell>
 

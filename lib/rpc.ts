@@ -46,6 +46,20 @@ export async function rpcCall(method: string, params: unknown[] = []): Promise<u
   throw new Error(`All nodes unreachable for method: ${method}`)
 }
 
+/**
+ * Call the same method on EVERY node (not failover). Returns one entry per
+ * node: the result on success, or null if that node failed/was unreachable.
+ * Used to gauge how many nodes are online.
+ */
+export async function rpcCallAll(
+  method: string,
+  params: unknown[] = []
+): Promise<(unknown | null)[]> {
+  return Promise.all(
+    NODES.map((node) => rpcCallNode(node, method, params).catch(() => null))
+  )
+}
+
 export async function rpcBatch(
   calls: { method: string; params?: unknown[] }[]
 ): Promise<unknown[]> {
