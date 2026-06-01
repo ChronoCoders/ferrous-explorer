@@ -120,6 +120,38 @@ export function StatsBar() {
             </span>
           </StatCell>
 
+          {/* EPOCH — RandomX key rotates every 2048 blocks */}
+          <StatCell label="EPOCH" loading={loading}>
+            <div className="flex items-baseline gap-1.5">
+              <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+                className="text-sm font-medium text-[#f0ede8]">
+                {stats ? stats.epoch.toLocaleString() : '—'}
+              </span>
+              {stats && (
+                <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+                  className="text-xs text-[#4b5563]">
+                  {stats.epoch_progress}% in
+                </span>
+              )}
+            </div>
+          </StatCell>
+
+          {/* TX COUNT — approximate (≥1 coinbase tx per block) */}
+          <StatCell label="TXS" loading={loading}>
+            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+              className="text-sm font-medium text-[#f0ede8]">
+              {stats ? stats.total_txs.toLocaleString() : '—'}
+            </span>
+          </StatCell>
+
+          {/* AVG FEE — 0 today: miner does not claim fees into coinbase */}
+          <StatCell label="AVG FEE" loading={loading}>
+            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+              className="text-sm font-medium text-[#f0ede8]">
+              {stats && stats.avg_fee_sats > 0 ? `${stats.avg_fee_sats} sats` : '—'}
+            </span>
+          </StatCell>
+
         </div>
       </div>
     </div>
@@ -137,13 +169,18 @@ function StatCell({
   children: React.ReactNode
   divider?: boolean
 }) {
+  // Variant D separators: an inset (56%-height, centered) neutral divider drawn as a
+  // ::before pseudo-element — luminance-contrasting so it actually reads on near-black,
+  // unlike the old full-height rust 0.15α border. The leftmost (HEIGHT) cell instead
+  // carries a 2px rust top-accent to anchor the brand and flag the live tip.
+  const dividerCls = divider
+    ? " before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-px before:h-[56%] before:bg-[rgba(240,237,232,0.12)]"
+    : ''
+
   return (
     <div
-      className="flex flex-col justify-center shrink-0"
-      style={{
-        padding: '1rem 1.5rem',
-        borderLeft: divider ? '1px solid rgba(192,57,43,0.15)' : undefined,
-      }}
+      className={'relative flex flex-col justify-center shrink-0' + dividerCls}
+      style={{ padding: '1rem 1.625rem' }}
     >
       <span
         className="text-[10px] text-[#4b5563] tracking-widest mb-1"

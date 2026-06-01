@@ -9,6 +9,22 @@ export interface ChainInfo {
   avg_block_time: number
   supply_frr: number
   blocks_to_halving: number
+  epoch: number
+  epoch_progress: number
+  total_txs: number
+  avg_fee_sats: number
+}
+
+export interface NodeInfo {
+  id: string
+  name: string
+  location: string
+  lat: number
+  lon: number
+  height: number
+  hashrate: number
+  peers: number
+  online: boolean
 }
 
 export interface BlockSummary {

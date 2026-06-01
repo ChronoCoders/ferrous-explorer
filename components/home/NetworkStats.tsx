@@ -56,23 +56,32 @@ export function NetworkStats() {
         Network Stats
       </h2>
 
-      <div className="divide-y divide-[#1e1e2a]">
-        {rows.map(({ label, value, mono }) => (
-          <div key={label} className="flex items-center justify-between py-2.5 gap-4">
-            <span className="text-sm text-[#6b7280]">{label}</span>
-            {value === null ? (
-              <div className="skeleton w-24 h-4 rounded" />
-            ) : (
-              <span
-                className="text-sm text-[#f0ede8] text-right"
-                style={mono ? { fontFamily: 'var(--font-mono, "Space Mono"), monospace' } : {}}
-              >
-                {value}
-              </span>
-            )}
-          </div>
-        ))}
+      <div className="grid grid-cols-2 gap-0 divide-x divide-[#1e1e2a]">
+        <div className="pr-6 divide-y divide-[#1e1e2a]">
+          {rows.slice(0, 6).map(renderRow)}
+        </div>
+        <div className="pl-6 divide-y divide-[#1e1e2a]">
+          {rows.slice(6).map(renderRow)}
+        </div>
       </div>
+    </div>
+  )
+}
+
+function renderRow({ label, value, mono }: Row) {
+  return (
+    <div key={label} className="flex items-center justify-between py-2.5 gap-4">
+      <span className="text-sm text-[#6b7280]">{label}</span>
+      {value === null ? (
+        <div className="skeleton w-24 h-4 rounded" />
+      ) : (
+        <span
+          className="text-sm text-[#f0ede8] text-right"
+          style={mono ? { fontFamily: 'var(--font-mono, "Space Mono"), monospace' } : {}}
+        >
+          {value}
+        </span>
+      )}
     </div>
   )
 }
