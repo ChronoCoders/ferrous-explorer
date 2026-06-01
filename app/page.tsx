@@ -4,6 +4,7 @@ import { MempoolPanel } from '@/components/home/MempoolPanel'
 import { HashrateChart } from '@/components/home/HashrateChart'
 import { BlockTimeChart } from '@/components/home/BlockTimeChart'
 import { NetworkStats } from '@/components/home/NetworkStats'
+import { NodeMap } from '@/components/home/NodeMap'
 import { PageTransition } from '@/components/layout/PageTransition'
 
 export default function HomePage() {
@@ -25,6 +26,9 @@ export default function HomePage() {
 
         {/* Network stats — full width, single column */}
         <NetworkStats />
+
+        {/* World map of active nodes — full width */}
+        <NodeMap />
       </div>
     </PageTransition>
   )
