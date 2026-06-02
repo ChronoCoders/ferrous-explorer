@@ -31,6 +31,7 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-5 text-sm text-[#6b7280] shrink-0">
           <Link href="/blocks" className="hover:text-[#f0ede8] transition-colors">Blocks</Link>
           <Link href="/mempool" className="hover:text-[#f0ede8] transition-colors">Mempool</Link>
+          <Link href="/broadcast" className="hover:text-[#f0ede8] transition-colors">Broadcast</Link>
           <a
             href="https://github.com/ChronoCoders/ferrous"
             target="_blank"
