@@ -5,6 +5,7 @@ import { ChainChart } from '@/components/home/ChainChart'
 import { BlockTimeChart } from '@/components/home/BlockTimeChart'
 import { NetworkStats } from '@/components/home/NetworkStats'
 import { DifficultyAdjustment } from '@/components/home/DifficultyAdjustment'
+import { MempoolDepthChart } from '@/components/home/MempoolDepthChart'
 import { NodeMap } from '@/components/home/NodeMap'
 import { PageTransition } from '@/components/layout/PageTransition'
 
@@ -23,6 +24,9 @@ export default function HomePage() {
           <TxList />
           <MempoolPanel />
         </div>
+
+        {/* Mempool depth over time */}
+        <MempoolDepthChart />
 
         {/* Bottom sections */}
         <BlockTimeChart />
