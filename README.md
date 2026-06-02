@@ -1,24 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ferrous Explorer
 
-## Getting Started
+Block explorer for the Ferrous Network (Next.js 16 + TypeScript + Tailwind 4). Reads live testnet data via a server-side RPC proxy.
 
-First, run the development server:
+## Local development
+
+Run on **port 3005**, not the Next.js default 3000 — Grafana (run in WSL2) also defaults to 3000 and the two flap over `localhost:3000` via WSL's port relay:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx next dev -p 3005
+# then open http://localhost:3005
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires `.env.local` (gitignored) with `SEED1_URL`/`SEED4_URL` (SSH-tunnelled RPC, e.g. `http://127.0.0.1:18331`) and `SEED1_COOKIE`/`SEED4_COOKIE` (from each node's `/root/ferrous/data/.rpc.cookie`). Open the tunnels first:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+ssh -f -N -L 18331:127.0.0.1:8332 root@45.77.153.141   # seed1
+ssh -f -N -L 18332:127.0.0.1:8332 root@45.77.64.221    # seed4
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit pages under `app/`; the dev server hot-reloads.
 
 ## Learn More
 
