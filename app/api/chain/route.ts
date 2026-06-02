@@ -136,6 +136,11 @@ export async function GET() {
     const supply = calculateSupply(height)
     const blocksToHalving = HALVING_INTERVAL - (height % HALVING_INTERVAL)
 
+    // Estimated next-block difficulty change (±1% retarget, inverse of target ratio).
+    const BLOCK_TIME_TARGET = 150
+    const targetRatio = Math.min(1.01, Math.max(0.99, avg_block_time / BLOCK_TIME_TARGET))
+    const estimated_adjustment = Number(((1 / targetRatio - 1) * 100).toFixed(2)) // % difficulty, next block
+
     return NextResponse.json({
       height: chainInfo.blocks,
       bestblockhash: chainInfo.bestblockhash,
@@ -152,6 +157,8 @@ export async function GET() {
       epoch_progress: Math.round(((chainInfo.blocks % 2048) / 2048) * 100),
       total_txs: chainInfo.blocks, // approximate: ≥1 coinbase tx per block
       avg_fee_sats,
+      estimated_adjustment, // signed % difficulty change estimated for the next block
+      block_time_target: BLOCK_TIME_TARGET,
     })
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 503 })
