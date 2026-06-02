@@ -101,10 +101,10 @@ export function MempoolDepthChart() {
                 vectorEffect="non-scaling-stroke"
               />
             )}
-            <text x={1195} y={8} textAnchor="end" fontSize={18} fill="#4ade80" opacity={0.5}>
+            <text x={1180} y={12} textAnchor="end" fontSize={18} fill="#4ade80" opacity={0.5}>
               {Math.round(maxSize / 1024)}KB
             </text>
-            <text x={1195} y={78} textAnchor="end" fontSize={18} fill="#4ade80" opacity={0.5}>
+            <text x={1180} y={72} textAnchor="end" fontSize={18} fill="#4ade80" opacity={0.5}>
               {Math.round(minSize / 1024)}KB
             </text>
           </svg>

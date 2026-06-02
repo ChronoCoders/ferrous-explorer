@@ -48,9 +48,9 @@ export function NetworkStats() {
   ]
 
   return (
-    <div className="card p-4">
+    <div className="card p-4 overflow-visible">
       <h2
-        style={{ fontFamily: 'var(--font-display, "Bebas Neue"), sans-serif', fontSize: '1.1rem', letterSpacing: '0.08em' }}
+        style={{ fontFamily: 'var(--font-display, "Bebas Neue"), sans-serif', fontSize: '1.1rem', letterSpacing: '0.08em', paddingLeft: '2px' }}
         className="text-[#f0ede8] mb-4"
       >
         Network Stats
