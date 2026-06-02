@@ -6,8 +6,10 @@ export const dynamic = 'force-dynamic'
 export async function GET(_req: Request, { params }: { params: Promise<{ addr: string }> }) {
   const { addr } = await params
   try {
-    const raw = (await rpcCall('listunspent')) as any[]
-    const utxos = (raw ?? [])
+    // listunspent returns { utxos: [...] }, not a bare array.
+    const raw = (await rpcCall('listunspent')) as { utxos?: any[] } | any[]
+    const list: any[] = Array.isArray(raw) ? raw : (raw?.utxos ?? [])
+    const utxos = list
       .filter((u: any) => u.address === addr)
       .map((u: any) => ({
         txid: u.txid,
