@@ -13,6 +13,8 @@ export interface ChainInfo {
   epoch_progress: number
   total_txs: number
   avg_fee_sats: number
+  estimated_adjustment: number
+  block_time_target: number
 }
 
 export interface NodeInfo {
