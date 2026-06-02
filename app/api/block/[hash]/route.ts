@@ -3,6 +3,14 @@ import { rpcCall } from '@/lib/rpc'
 
 export const dynamic = 'force-dynamic'
 
+function nBitsToDifficulty(nBits: number): number {
+  const exponent = nBits >> 24
+  const mantissa = nBits & 0x00ffffff
+  if (mantissa === 0) return 0
+  const target = mantissa * Math.pow(256, exponent - 3)
+  return Math.pow(2, 224) / target
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseVerboseBlock(b: any) {
   const txs = (b.transactions ?? []).map((tx: any) => {
@@ -37,18 +45,21 @@ function parseVerboseBlock(b: any) {
     }
   })
 
+  const nBitsStr = b.bits ?? b.n_bits ?? ''
+  const nBitsNum = nBitsStr ? parseInt(nBitsStr, 16) : NaN
+
   return {
     hash: b.hash,
     height: b.height,
     timestamp: b.time,
-    nBits: b.bits ?? b.n_bits ?? '',
+    nBits: nBitsStr,
     nonce: b.nonce ?? 0,
     merkleRoot: b.merkle_root ?? b.merkleroot ?? '',
     prevHash: b.prev_block_hash ?? b.previousblockhash ?? '',
     size: b.size ?? 0,
     txCount: b.n_tx ?? txs.length,
     miner: b.miner ?? '',
-    difficulty: b.difficulty ?? 0,
+    difficulty: b.difficulty ?? (Number.isNaN(nBitsNum) ? 0 : nBitsToDifficulty(nBitsNum)),
     transactions: txs,
   }
 }
