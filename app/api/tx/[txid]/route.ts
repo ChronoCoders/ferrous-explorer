@@ -21,12 +21,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ txid: s
       const txs: any[] = raw.transactions ?? []
       const found = txs.find((t: any) => t.txid === txid)
       if (found) {
-        const isCoinbase = found.vin?.some((i: any) => i.coinbase !== undefined) ?? false
+        const isCoinbase = found.vin?.some((i: any) => i.coinbase === true) ?? false
         const inputs = (found.vin ?? []).map((i: any) => ({
           txid: i.txid ?? '',
           vout: i.vout ?? 0,
           scriptSig: i.script_sig ?? '',
-          isCoinbase: i.coinbase !== undefined,
+          isCoinbase: i.coinbase === true,
           address: i.address ?? undefined,
           amount: i.value ?? undefined,
         }))

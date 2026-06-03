@@ -14,12 +14,12 @@ function nBitsToDifficulty(nBits: number): number {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseVerboseBlock(b: any) {
   const txs = (b.transactions ?? []).map((tx: any) => {
-    const isCoinbase = tx.vin?.some((i: any) => i.coinbase !== undefined) ?? false
+    const isCoinbase = tx.vin?.some((i: any) => i.coinbase === true) ?? false
     const inputs = (tx.vin ?? []).map((i: any) => ({
       txid: i.txid ?? '',
       vout: i.vout ?? 0,
       scriptSig: i.script_sig ?? i.scriptSig ?? '',
-      isCoinbase: i.coinbase !== undefined,
+      isCoinbase: i.coinbase === true,
       address: i.address ?? undefined,
       amount: i.value ?? undefined,
     }))
