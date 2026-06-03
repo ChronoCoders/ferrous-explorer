@@ -22,7 +22,7 @@ export async function GET() {
     const txs: any[] = []
     for (const block of blocks.filter(Boolean)) {
       for (const tx of block.transactions ?? []) {
-        const isCoinbase = tx.vin?.some((i: any) => i.coinbase !== undefined) ?? false
+        const isCoinbase = tx.vin?.some((i: any) => i.coinbase === true) ?? false
         const outputs = (tx.vout ?? []).map((o: any, idx: number) => ({
           n: idx,
           address: o.address ?? '',
