@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CopyButton } from '@/components/ui/CopyButton'
 import type { Block } from '@/lib/types'
 import { truncateHash, formatAge, formatBytes, formatDifficulty } from '@/lib/utils'
 
@@ -43,11 +44,14 @@ export function BlockHeader({ block }: { block: Block }) {
       </div>
 
       {/* Full hash */}
-      <div className="mb-6 p-3 rounded-lg bg-[#13131a] border border-[#1e1e2a]">
-        <div className="text-xs text-[#4b5563] mb-1" style={{ fontFamily: '"Space Mono", monospace' }}>BLOCK HASH</div>
-        <div className="text-sm text-[#9ca3af] break-all" style={{ fontFamily: '"Space Mono", monospace' }}>
-          {block.hash}
+      <div className="mb-6 p-3 rounded-lg bg-[#13131a] border border-[#1e1e2a] flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-xs text-[#4b5563] mb-1" style={{ fontFamily: '"Space Mono", monospace' }}>BLOCK HASH</div>
+          <div className="text-sm text-[#9ca3af] break-all" style={{ fontFamily: '"Space Mono", monospace' }}>
+            {block.hash}
+          </div>
         </div>
+        <CopyButton text={block.hash} />
       </div>
 
       {/* Metadata grid */}
