@@ -58,7 +58,7 @@ export function BlockHeader({ block }: { block: Block }) {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
         <MetaCard label="HEIGHT" value={block.height.toLocaleString()} mono />
         <MetaCard label="TIMESTAMP" value={new Date(block.timestamp * 1000).toISOString().replace('T', ' ').slice(0, 19) + ' UTC'} mono />
-        <MetaCard label="AGE" value={formatAge(block.timestamp)} />
+        <MetaCard label="AGE" value={block.height === 0 ? 'Genesis' : formatAge(block.timestamp)} />
         <MetaCard label="TRANSACTIONS" value={block.txCount.toString()} mono />
         <MetaCard label="SIZE" value={formatBytes(block.size)} mono />
         <MetaCard label="DIFFICULTY" value={formatDifficulty(block.difficulty)} mono />
