@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const chainInfo = (await rpcCall('getblockchaininfo')) as { blocks: number }
     const tip = chainInfo.blocks
 
-    const heights = Array.from({ length: count }, (_, i) => Math.max(0, tip - i))
+    const heights = Array.from({ length: Math.min(count, tip + 1) }, (_, i) => tip - i)
 
     // Batch getblockhash
     const hashResults = await rpcBatch(heights.map((h) => ({ method: 'getblockhash', params: [h] })))
