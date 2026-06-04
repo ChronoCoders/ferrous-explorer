@@ -51,7 +51,7 @@ export function StatsBar() {
         <div className="flex items-stretch overflow-x-auto">
 
           {/* HEIGHT */}
-          <StatCell label="HEIGHT" loading={loading} divider={false}>
+          <StatCell label="HEIGHT" loading={loading}>
             <div className="flex items-center gap-2">
               {!loading && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C0392B] animate-pulse-dot shrink-0" />
@@ -144,8 +144,8 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* AVG FEE — 0 today: miner does not claim fees into coinbase */}
-          <StatCell label="AVG FEE" loading={loading}>
+          {/* AVG FEE */}
+          <StatCell label="AVG FEE" loading={loading} rightDivider>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
               {stats && stats.avg_fee_sats > 0 ? `${stats.avg_fee_sats} sats` : '—'}
@@ -163,23 +163,26 @@ function StatCell({
   loading,
   children,
   divider = true,
+  rightDivider = false,
 }: {
   label: string
   loading: boolean
   children: React.ReactNode
   divider?: boolean
+  rightDivider?: boolean
 }) {
-  // Variant D separators: an inset (56%-height, centered) neutral divider drawn as a
-  // ::before pseudo-element — luminance-contrasting so it actually reads on near-black,
-  // unlike the old full-height rust 0.15α border. The leftmost (HEIGHT) cell instead
-  // carries a 2px rust top-accent to anchor the brand and flag the live tip.
+  // Variant D separators: inset (56%-height, centered) neutral dividers as pseudo-elements.
+  // Every cell draws a left divider (::before); the last cell also draws a right one (::after).
   const dividerCls = divider
     ? " before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-px before:h-[56%] before:bg-[rgba(240,237,232,0.12)]"
+    : ''
+  const rightDividerCls = rightDivider
+    ? " after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-px after:h-[56%] after:bg-[rgba(240,237,232,0.12)]"
     : ''
 
   return (
     <div
-      className={'relative flex flex-col justify-center shrink-0' + dividerCls}
+      className={'relative flex flex-col justify-center shrink-0' + dividerCls + rightDividerCls}
       style={{ padding: '1rem 1.625rem' }}
     >
       <span
