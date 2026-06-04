@@ -40,6 +40,19 @@ function blockTimeColor(secs: number): string {
   return '#C0392B'                    // rust — slow
 }
 
+function formatHalvingEta(seconds: number): string {
+  const days = seconds / 86400
+  if (days >= 365) {
+    const years = Math.floor(days / 365)
+    const months = Math.floor((days % 365) / 30)
+    return `~${years}y ${months}m`
+  }
+  if (days >= 30) return `~${Math.floor(days)}d`
+  const d = Math.floor(days)
+  const h = Math.floor((seconds % 86400) / 3600)
+  return `~${d}d ${h}h`
+}
+
 export function StatsBar() {
   const { stats, loading } = useChainStats()
   const bt = stats?.avg_block_time ?? null
@@ -114,10 +127,18 @@ export function StatsBar() {
 
           {/* NEXT HALVING */}
           <StatCell label="NEXT HALVING" loading={loading}>
-            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
-              className="text-sm font-medium text-[#f0ede8]">
-              {stats ? `${stats.blocks_to_halving.toLocaleString()} blocks` : '—'}
-            </span>
+            <div className="flex flex-col">
+              <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+                className="text-sm font-medium text-[#f0ede8]">
+                {stats ? `${stats.blocks_to_halving.toLocaleString()} blocks` : '—'}
+              </span>
+              {stats && (
+                <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+                  className="text-xs text-[#4b5563]">
+                  {formatHalvingEta(stats.blocks_to_halving * (stats.avg_block_time || 150))}
+                </span>
+              )}
+            </div>
           </StatCell>
 
           {/* EPOCH — RandomX key rotates every 2048 blocks */}
