@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { rpcCall } from '@/lib/rpc'
+import { estimateTxSize } from '@/lib/txSize'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,7 +37,7 @@ function parseVerboseBlock(b: any) {
       version: tx.version ?? 1,
       inputs,
       outputs,
-      size: tx.size ?? 0,
+      size: tx.size ?? estimateTxSize(inputs.length, outputs.length, isCoinbase),
       isCoinbase,
       totalOut,
       blockHash: b.hash,
