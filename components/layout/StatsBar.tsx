@@ -203,16 +203,16 @@ function StatCell({
     >
       {sub ? (
         <>
-          {loading ? <div className="skeleton w-16 h-4" /> : children}
           <span
-            className="text-[10px] text-[#4b5563] tracking-widest mt-1"
+            className="text-[10px] text-[#4b5563] tracking-widest mb-1"
             style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
           >
             {label}
           </span>
+          {loading ? <div className="skeleton w-16 h-4" /> : children}
           {!loading && (
             <span
-              className="text-xs text-[#4b5563]"
+              className="text-xs text-[#4b5563] mt-1"
               style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
             >
               {sub}
