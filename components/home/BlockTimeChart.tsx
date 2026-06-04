@@ -53,6 +53,7 @@ export function BlockTimeChart() {
 
         const bars: BarDatum[] = []
         for (let i = 1; i < sorted.length; i++) {
+          if (sorted[i - 1].height === 0) continue
           const diff = sorted[i].timestamp - sorted[i - 1].timestamp
           if (diff > 0) {
             bars.push({ height: sorted[i].height, interval: diff })
