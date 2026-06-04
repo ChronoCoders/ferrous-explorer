@@ -126,19 +126,12 @@ export function StatsBar() {
           </StatCell>
 
           {/* NEXT HALVING */}
-          <StatCell label="NEXT HALVING" loading={loading}>
-            <div className="flex flex-col">
-              <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
-                className="text-sm font-medium text-[#f0ede8]">
-                {stats ? `${stats.blocks_to_halving.toLocaleString()} blocks` : '—'}
-              </span>
-              {stats && (
-                <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
-                  className="text-xs text-[#4b5563]">
-                  {formatHalvingEta(stats.blocks_to_halving * (stats.avg_block_time || 150))}
-                </span>
-              )}
-            </div>
+          <StatCell label="NEXT HALVING" loading={loading}
+            sub={stats ? formatHalvingEta(stats.blocks_to_halving * (stats.avg_block_time || 150)) : undefined}>
+            <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+              className="text-sm font-medium text-[#f0ede8]">
+              {stats ? `${stats.blocks_to_halving.toLocaleString()} blocks` : '—'}
+            </span>
           </StatCell>
 
           {/* EPOCH — RandomX key rotates every 2048 blocks */}
@@ -183,12 +176,14 @@ function StatCell({
   label,
   loading,
   children,
+  sub,
   divider = true,
   rightDivider = false,
 }: {
   label: string
   loading: boolean
   children: React.ReactNode
+  sub?: string
   divider?: boolean
   rightDivider?: boolean
 }) {
@@ -206,13 +201,35 @@ function StatCell({
       className={'relative flex flex-col justify-center flex-1 min-w-fit' + dividerCls + rightDividerCls}
       style={{ padding: '1rem 1.625rem' }}
     >
-      <span
-        className="text-[10px] text-[#4b5563] tracking-widest mb-1"
-        style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
-      >
-        {label}
-      </span>
-      {loading ? <div className="skeleton w-16 h-4" /> : children}
+      {sub ? (
+        <>
+          {loading ? <div className="skeleton w-16 h-4" /> : children}
+          <span
+            className="text-[10px] text-[#4b5563] tracking-widest mt-1"
+            style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+          >
+            {label}
+          </span>
+          {!loading && (
+            <span
+              className="text-xs text-[#4b5563]"
+              style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+            >
+              {sub}
+            </span>
+          )}
+        </>
+      ) : (
+        <>
+          <span
+            className="text-[10px] text-[#4b5563] tracking-widest mb-1"
+            style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
+          >
+            {label}
+          </span>
+          {loading ? <div className="skeleton w-16 h-4" /> : children}
+        </>
+      )}
     </div>
   )
 }
