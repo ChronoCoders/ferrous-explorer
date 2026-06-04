@@ -198,7 +198,7 @@ function StatCell({
 
   return (
     <div
-      className={'relative flex flex-col justify-center flex-1 min-w-fit' + dividerCls + rightDividerCls}
+      className={'relative flex flex-col justify-start flex-1 min-w-fit' + dividerCls + rightDividerCls}
       style={{ padding: '1rem 1.625rem' }}
     >
       {sub ? (
