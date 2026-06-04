@@ -29,8 +29,7 @@ export function formatHashrate(hps: number): string {
 export function formatDifficulty(d: number): string {
   if (d === 0) return '0'
   if (d >= 1) return d.toLocaleString(undefined, { maximumFractionDigits: 2 })
-  // Sub-1 difficulty: show 4 significant figures, trimming trailing zeros.
-  return d.toPrecision(4).replace(/\.?0+$/, '')
+  return d.toFixed(10).replace(/\.?0+$/, '')
 }
 
 export function formatBytes(bytes: number): string {
