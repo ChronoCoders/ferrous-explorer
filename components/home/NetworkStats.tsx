@@ -25,7 +25,7 @@ export function NetworkStats() {
     },
     {
       label: 'Avg Block Time',
-      value: loading ? null : stats?.avg_block_time != null ? `${stats.avg_block_time}s` : '150s',
+      value: loading ? null : stats?.avg_block_time != null ? `${stats.avg_block_time}s` : '—',
       mono: true,
     },
     {
@@ -38,7 +38,15 @@ export function NetworkStats() {
       value: loading ? null : stats ? formatDifficulty(stats.difficulty) : '—',
       mono: true,
     },
-    { label: 'Genesis Block', value: '2026-05-31', mono: true },
+    {
+      label: 'Chain Start',
+      value: loading
+        ? null
+        : stats?.chain_start != null
+          ? new Date(stats.chain_start * 1000).toISOString().slice(0, 10)
+          : '—',
+      mono: true,
+    },
     { label: 'Algorithm', value: 'RandomX' },
     { label: 'Signature Scheme', value: 'ML-DSA-65 (FIPS 204)' },
     { label: 'Address Format', value: 'P2DL · bech32m' },

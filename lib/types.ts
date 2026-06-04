@@ -6,7 +6,7 @@ export interface ChainInfo {
   connections: number
   nodes_online: number
   chain: string
-  avg_block_time: number
+  avg_block_time: number | null
   supply_frr: number
   blocks_to_halving: number
   epoch: number
@@ -15,6 +15,7 @@ export interface ChainInfo {
   avg_fee_sats: number
   estimated_adjustment: number
   block_time_target: number
+  chain_start: number | null
 }
 
 export interface NodeInfo {

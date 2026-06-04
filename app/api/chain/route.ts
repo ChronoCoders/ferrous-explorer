@@ -3,12 +3,15 @@ import { rpcCall, rpcBatch, rpcCallAll } from '@/lib/rpc'
 
 export const dynamic = 'force-dynamic'
 
-async function computeAvgBlockTime(tipHeight: number): Promise<number> {
+// Genesis is excluded: its wire timestamp predates the chain (set when the
+// nonce was computed), so including it poisons the average on a young chain.
+// Returns null when fewer than 2 post-genesis blocks exist.
+async function computeAvgBlockTime(tipHeight: number): Promise<number | null> {
   const SAMPLE = 10
-  if (tipHeight < 2) return 150
+  if (tipHeight < 2) return null
 
-  const count = Math.min(SAMPLE, tipHeight)
-  const heights = Array.from({ length: count + 1 }, (_, i) => tipHeight - i)
+  const lowest = Math.max(1, tipHeight - SAMPLE)
+  const heights = Array.from({ length: tipHeight - lowest + 1 }, (_, i) => tipHeight - i)
 
   const hashes = (await rpcBatch(
     heights.map((h) => ({ method: 'getblockhash', params: [h] }))
@@ -24,7 +27,7 @@ async function computeAvgBlockTime(tipHeight: number): Promise<number> {
     .filter((t) => t > 0)
     .sort((a, b) => a - b)
 
-  if (timestamps.length < 2) return 150
+  if (timestamps.length < 2) return null
 
   const intervals: number[] = []
   for (let i = 1; i < timestamps.length; i++) {
@@ -32,7 +35,7 @@ async function computeAvgBlockTime(tipHeight: number): Promise<number> {
     if (diff > 0) intervals.push(diff)
   }
 
-  if (intervals.length === 0) return 150
+  if (intervals.length === 0) return null
   return Math.round(intervals.reduce((s, v) => s + v, 0) / intervals.length)
 }
 
@@ -112,6 +115,16 @@ export async function GET() {
     const avg_block_time = await computeAvgBlockTime(chainInfo.blocks)
     const avg_fee_sats = await computeAvgFeeSats(chainInfo.blocks)
 
+    // Chain start = block 1's timestamp (genesis carries a stale pre-reset time).
+    let chain_start: number | null = null
+    if (chainInfo.blocks >= 1) {
+      try {
+        const h1 = (await rpcCall('getblockhash', [1])) as string
+        const b1 = (await rpcCall('getblock', [h1, true])) as { time: number }
+        chain_start = b1?.time ?? null
+      } catch {}
+    }
+
     // Circulating supply and blocks-until-next-halving, computed from height.
     // BigInt() constructor (not literal `n` syntax) so this compiles at the
     // project's ES2017 target.
@@ -138,7 +151,10 @@ export async function GET() {
 
     // Estimated next-block difficulty change (±1% retarget, inverse of target ratio).
     const BLOCK_TIME_TARGET = 150
-    const targetRatio = Math.min(1.01, Math.max(0.99, avg_block_time / BLOCK_TIME_TARGET))
+    const targetRatio = Math.min(
+      1.01,
+      Math.max(0.99, (avg_block_time ?? BLOCK_TIME_TARGET) / BLOCK_TIME_TARGET)
+    )
     const estimated_adjustment = Number(((1 / targetRatio - 1) * 100).toFixed(2)) // % difficulty, next block
 
     return NextResponse.json({
@@ -159,6 +175,7 @@ export async function GET() {
       avg_fee_sats,
       estimated_adjustment, // signed % difficulty change estimated for the next block
       block_time_target: BLOCK_TIME_TARGET,
+      chain_start,
     })
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 503 })
