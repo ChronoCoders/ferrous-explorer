@@ -131,7 +131,7 @@ export function BlockList() {
                     className="text-xs text-[#4b5563] text-right shrink-0 whitespace-nowrap"
                     style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace', minWidth: 64 }}
                   >
-                    {formatAge(block.timestamp)}
+                    {block.height === 0 ? 'Genesis' : formatAge(block.timestamp)}
                   </span>
                 </Link>
               </motion.div>

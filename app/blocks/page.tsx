@@ -144,7 +144,7 @@ function BlocksInner() {
                   className="text-xs text-[#4b5563] w-24 text-right shrink-0 whitespace-nowrap"
                   style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
                 >
-                  {formatAge(block.timestamp)}
+                  {block.height === 0 ? 'Genesis' : formatAge(block.timestamp)}
                 </span>
                 <span
                   className="text-xs text-[#6b7280] w-40 text-right shrink-0 truncate"
