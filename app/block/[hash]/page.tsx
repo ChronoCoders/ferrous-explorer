@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { BlockHeader } from '@/components/block/BlockHeader'
 import { BlockTxList } from '@/components/block/BlockTxList'
 import { PageTransition } from '@/components/layout/PageTransition'
+import { getBaseUrl } from '@/lib/baseUrl'
 import type { Block } from '@/lib/types'
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 
 async function getBlock(hash: string): Promise<Block | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = await getBaseUrl()
     const res = await fetch(`${baseUrl}/api/block/${hash}`, { cache: 'no-store' })
     if (!res.ok) return null
     const data = await res.json()

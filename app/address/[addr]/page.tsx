@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { AddressHeader } from '@/components/address/AddressHeader'
 import { UtxoList } from '@/components/address/UtxoList'
 import { PageTransition } from '@/components/layout/PageTransition'
+import { getBaseUrl } from '@/lib/baseUrl'
 import type { AddressInfo } from '@/lib/types'
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 
 async function getAddress(addr: string): Promise<AddressInfo | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = await getBaseUrl()
     const res = await fetch(`${baseUrl}/api/address/${addr}`, { cache: 'no-store' })
     if (!res.ok) return null
     const data = await res.json()
