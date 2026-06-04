@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { rpcCall, rpcBatch } from '@/lib/rpc'
+import { estimateTxSize } from '@/lib/txSize'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,7 +43,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ txid: s
           version: found.version ?? 1,
           inputs,
           outputs,
-          size: found.size ?? 0,
+          size: found.size ?? estimateTxSize(inputs.length, outputs.length, isCoinbase),
           isCoinbase,
           totalOut,
           blockHash: raw.hash,
