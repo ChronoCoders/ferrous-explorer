@@ -103,7 +103,7 @@ export function BlockTimeChart() {
         <div className="skeleton rounded" style={{ height: 160 }} />
       ) : (
         <div style={{ height: 160, minWidth: 0 }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 600, height: 160 }}>
             <BarChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }} barCategoryGap="20%">
               <Tooltip
                 cursor={{ fill: 'rgba(255,255,255,0.04)' }}
