@@ -62,6 +62,9 @@ export function SearchBar() {
         <Search size={14} className="text-[#4b5563] shrink-0" />
         <input
           ref={inputRef}
+          id="explorer-search"
+          name="q"
+          autoComplete="off"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
