@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { BarChart, Bar, ResponsiveContainer, Tooltip, Cell } from 'recharts'
+import { ComposedChart, Bar, Line, ReferenceLine, ResponsiveContainer, Tooltip, Cell } from 'recharts'
 
 interface BarDatum {
   height: number
   interval: number   // seconds
+  avg: number        // trailing rolling mean
 }
+
+const ROLLING_WINDOW = 10
 
 type Range = '1H' | '6H' | '24H'
 
@@ -56,13 +59,18 @@ export function BlockTimeChart() {
           if (sorted[i - 1].height === 0) continue
           const diff = sorted[i].timestamp - sorted[i - 1].timestamp
           if (diff > 0) {
-            bars.push({ height: sorted[i].height, interval: diff })
+            bars.push({ height: sorted[i].height, interval: diff, avg: 0 })
           }
         }
 
-        const result = bars.reverse()  // newest first for display
-        cache.current[range] = result
-        setData(result)
+        for (let i = 0; i < bars.length; i++) {
+          const start = Math.max(0, i - ROLLING_WINDOW + 1)
+          const slice = bars.slice(start, i + 1)
+          bars[i].avg = Math.round(slice.reduce((s, b) => s + b.interval, 0) / slice.length)
+        }
+
+        cache.current[range] = bars
+        setData(bars)
       } catch {}
     }
 
@@ -104,7 +112,8 @@ export function BlockTimeChart() {
       ) : (
         <div style={{ height: 160, minWidth: 0 }}>
           <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 600, height: 160 }}>
-            <BarChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }} barCategoryGap="20%">
+            <ComposedChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }} barCategoryGap="20%">
+              <ReferenceLine y={TARGET} stroke="#6b7280" strokeDasharray="4 4" strokeOpacity={0.6} />
               <Tooltip
                 cursor={{ fill: 'rgba(255,255,255,0.04)' }}
                 content={({ active, payload }) => {
@@ -123,6 +132,7 @@ export function BlockTimeChart() {
                     >
                       <div style={{ color: '#6b7280' }}>Block #{d.height}</div>
                       <div style={{ color: barColor(d.interval) }}>{d.interval}s</div>
+                      <div style={{ color: '#4ade80' }}>avg: {d.avg}s</div>
                       <div style={{ color: '#4b5563' }}>target: {TARGET}s</div>
                     </div>
                   )
@@ -130,10 +140,18 @@ export function BlockTimeChart() {
               />
               <Bar dataKey="interval" radius={[2, 2, 0, 0]}>
                 {data.map((entry, i) => (
-                  <Cell key={i} fill={barColor(entry.interval)} fillOpacity={0.8} />
+                  <Cell key={i} fill={barColor(entry.interval)} fillOpacity={0.55} />
                 ))}
               </Bar>
-            </BarChart>
+              <Line
+                type="monotone"
+                dataKey="avg"
+                stroke="#4ade80"
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={false}
+              />
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
       )}
@@ -141,9 +159,9 @@ export function BlockTimeChart() {
       {/* Legend */}
       <div className="flex items-center gap-4 mt-3">
         {[
-          { color: '#4ade80', label: '< 120s fast' },
-          { color: '#f0ede8', label: '120–180s normal' },
-          { color: '#C0392B', label: '> 180s slow' },
+          { color: '#4ade80', label: `${ROLLING_WINDOW}-blk avg` },
+          { color: '#6b7280', label: '150s target' },
+          { color: '#C0392B', label: 'per-block (high variance is normal)' },
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-sm" style={{ background: color }} />
