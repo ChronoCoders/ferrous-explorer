@@ -52,15 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between text-xs text-[#4b5563]"
             style={{ fontFamily: 'var(--font-mono), monospace' }}
           >
-            <span>FERROUS NETWORK · TESTNET · ML-DSA-65 + RANDOMX</span>
-            <a
-              href="https://github.com/ChronoCoders/ferrous"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#C0392B] transition-colors"
-            >
-              GitHub
-            </a>
+            <span>Ferrous Explorer</span>
+            <span />
           </div>
         </footer>
       </body>
