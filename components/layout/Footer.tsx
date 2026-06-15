@@ -18,10 +18,10 @@ export function Footer() {
 
     const check = async () => {
       try {
-        const res = await fetch('/api/chain', { cache: 'no-store' })
+        const res = await fetch('/api/nodes', { cache: 'no-store' })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = (await res.json()) as { nodes_online?: number }
-        const online = data.nodes_online ?? 0
+        const nodes = (await res.json()) as Array<{ online?: boolean }>
+        const online = Array.isArray(nodes) ? nodes.filter((n) => n.online).length : 0
         if (!active) return
         setStatus(online >= 2 ? 'operational' : online === 1 ? 'degraded' : 'offline')
       } catch {
