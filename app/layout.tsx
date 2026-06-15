@@ -3,6 +3,7 @@ import { Space_Grotesk, Space_Mono, Bebas_Neue } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { StatsBar } from '@/components/layout/StatsBar'
+import { Footer } from '@/components/layout/Footer'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -47,15 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <StatsBar />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-[#1e1e2a] py-4 mt-8">
-          <div
-            className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between text-xs text-[#4b5563]"
-            style={{ fontFamily: 'var(--font-mono), monospace' }}
-          >
-            <span>Ferrous Explorer</span>
-            <span />
-          </div>
-        </footer>
+        <Footer />
       </body>
     </html>
   )
