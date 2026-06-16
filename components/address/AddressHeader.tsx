@@ -9,7 +9,6 @@ import type { AddressInfo } from '@/lib/types'
 export function AddressHeader({ info }: { info: AddressInfo }) {
   return (
     <div>
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-[#4b5563] mb-6" style={{ fontFamily: '"Space Mono", monospace' }}>
         <Link href="/" className="hover:text-[#C0392B] transition-colors">HOME</Link>
         <span>/</span>
@@ -18,7 +17,6 @@ export function AddressHeader({ info }: { info: AddressInfo }) {
         <span className="text-[#f0ede8]">{info.address.slice(0, 16)}...</span>
       </div>
 
-      {/* Title */}
       <h1
         style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.06em' }}
         className="text-4xl text-[#f0ede8] mb-4"
@@ -26,7 +24,6 @@ export function AddressHeader({ info }: { info: AddressInfo }) {
         Address
       </h1>
 
-      {/* Address display */}
       <div className="mb-6 p-4 rounded-lg bg-[#13131a] border border-[#1e1e2a] flex items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -42,7 +39,6 @@ export function AddressHeader({ info }: { info: AddressInfo }) {
         <CopyButton text={info.address} />
       </div>
 
-      {/* Balance */}
       <div className="mb-6 p-6 rounded-lg bg-gradient-to-br from-[#1a1014] to-[#13131a] border border-[#C0392B]/20">
         <div className="text-xs text-[#6b7280] mb-2 tracking-widest" style={{ fontFamily: '"Space Mono", monospace' }}>
           BALANCE
@@ -60,7 +56,6 @@ export function AddressHeader({ info }: { info: AddressInfo }) {
         </div>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
         {[
           { label: 'UTXO COUNT', value: info.utxoCount.toString() },

@@ -27,7 +27,6 @@ function parseVerboseBlock(b: any) {
     const outputs = (tx.vout ?? []).map((o: any, idx: number) => ({
       n: idx,
       address: o.address ?? o.scriptPubkey ?? '',
-      // value_frr is already in FRR (float); multiply by 1e8 to store as frsats
       amount: Math.round((o.value_frr ?? o.value ?? 0) * 1e8),
       scriptPubkey: o.script_pubkey ?? o.scriptPubKey ?? '',
     }))
@@ -68,7 +67,6 @@ function parseVerboseBlock(b: any) {
 export async function GET(_req: Request, { params }: { params: Promise<{ hash: string }> }) {
   const { hash } = await params
   try {
-    // If numeric, treat as height
     let blockHash = hash
     if (/^\d+$/.test(hash)) {
       blockHash = (await rpcCall('getblockhash', [parseInt(hash)])) as string

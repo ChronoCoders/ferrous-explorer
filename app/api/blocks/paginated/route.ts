@@ -12,13 +12,11 @@ export async function GET(req: Request) {
     const chainInfo = (await rpcCall('getblockchaininfo')) as { blocks: number }
     const tip = chainInfo.blocks
 
-    const totalBlocks = tip + 1 // heights 0..tip inclusive
+    const totalBlocks = tip + 1
     const totalPages = Math.max(1, Math.ceil(totalBlocks / limit))
 
-    // Start height for this page (descending). Page 1 starts at the tip.
     const startHeight = tip - (page - 1) * limit
 
-    // Build the list of heights for this page, clamped at genesis (0).
     const heights: number[] = []
     for (let i = 0; i < limit; i++) {
       const h = startHeight - i

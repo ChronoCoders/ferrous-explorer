@@ -6,8 +6,6 @@ import { Badge } from '@/components/ui/Badge'
 import { truncateHash, formatFRR } from '@/lib/utils'
 import type { Transaction } from '@/lib/types'
 
-// Arrow that draws itself on mount — signals that the flow is being revealed,
-// not just statically present.
 function DrawArrow({ fee }: { fee: number }) {
   return (
     <div className="flex sm:flex-col items-center justify-center gap-2 px-2">
@@ -19,7 +17,6 @@ function DrawArrow({ fee }: { fee: number }) {
         xmlns="http://www.w3.org/2000/svg"
         className="shrink-0"
       >
-        {/* Shaft */}
         <motion.line
           x1="2"
           y1="16"
@@ -32,7 +29,6 @@ function DrawArrow({ fee }: { fee: number }) {
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.15 }}
         />
-        {/* Arrowhead top */}
         <motion.line
           x1="18"
           y1="8"
@@ -45,7 +41,6 @@ function DrawArrow({ fee }: { fee: number }) {
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration: 0.2, ease: 'easeInOut', delay: 0.5 }}
         />
-        {/* Arrowhead bottom */}
         <motion.line
           x1="18"
           y1="24"
@@ -97,7 +92,6 @@ export function TxFlow({ tx }: { tx: Transaction }) {
       </h2>
 
       <div className="flex flex-col sm:flex-row gap-4 items-stretch">
-        {/* Inputs */}
         <div className="flex-1 space-y-2">
           <div
             className="text-xs text-[#4b5563] mb-3 tracking-widest"
@@ -148,10 +142,8 @@ export function TxFlow({ tx }: { tx: Transaction }) {
           ))}
         </div>
 
-        {/* Animated arrow */}
         <DrawArrow fee={fee} />
 
-        {/* Outputs */}
         <div className="flex-1 space-y-2">
           <div
             className="text-xs text-[#4b5563] mb-3 tracking-widest"

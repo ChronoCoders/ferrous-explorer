@@ -22,7 +22,6 @@ async function rpcCallNode(
       Authorization: `Basic ${auth}`,
     },
     body: JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 }),
-    // No cache — always fresh
     cache: 'no-store',
   })
 
@@ -39,18 +38,11 @@ export async function rpcCall(method: string, params: unknown[] = []): Promise<u
   for (const node of NODES) {
     try {
       return await rpcCallNode(node, method, params)
-    } catch {
-      // try next node
-    }
+    } catch {}
   }
   throw new Error(`All nodes unreachable for method: ${method}`)
 }
 
-/**
- * Call the same method on EVERY node (not failover). Returns one entry per
- * node: the result on success, or null if that node failed/was unreachable.
- * Used to gauge how many nodes are online.
- */
 export async function rpcCallAll(
   method: string,
   params: unknown[] = []
@@ -85,9 +77,7 @@ export async function rpcBatch(
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const results = (await res.json()) as { result?: unknown; id: number }[]
       return results.sort((a, b) => (a.id as number) - (b.id as number)).map((r) => r.result)
-    } catch {
-      // try next node
-    }
+    } catch {}
   }
   throw new Error('All nodes unreachable for batch call')
 }

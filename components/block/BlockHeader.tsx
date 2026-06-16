@@ -22,14 +22,12 @@ function MetaCard({ label, value, mono = false }: { label: string; value: string
 export function BlockHeader({ block }: { block: Block }) {
   return (
     <div>
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-[#4b5563] mb-6" style={{ fontFamily: '"Space Mono", monospace' }}>
         <Link href="/" className="hover:text-[#C0392B] transition-colors">HOME</Link>
         <span>/</span>
         <span className="text-[#f0ede8]">BLOCK #{block.height}</span>
       </div>
 
-      {/* Title */}
       <div className="flex items-center gap-4 mb-6">
         <h1
           style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.06em' }}
@@ -43,7 +41,6 @@ export function BlockHeader({ block }: { block: Block }) {
         </span>
       </div>
 
-      {/* Full hash */}
       <div className="mb-6 p-3 rounded-lg bg-[#13131a] border border-[#1e1e2a] flex items-center justify-between gap-4">
         <div className="min-w-0">
           <div className="text-xs text-[#4b5563] mb-1" style={{ fontFamily: '"Space Mono", monospace' }}>BLOCK HASH</div>
@@ -54,7 +51,6 @@ export function BlockHeader({ block }: { block: Block }) {
         <CopyButton text={block.hash} />
       </div>
 
-      {/* Metadata grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
         <MetaCard label="HEIGHT" value={block.height.toLocaleString()} mono />
         <MetaCard label="TIMESTAMP" value={new Date(block.timestamp * 1000).toISOString().replace('T', ' ').slice(0, 19) + ' UTC'} mono />
@@ -66,7 +62,6 @@ export function BlockHeader({ block }: { block: Block }) {
         <MetaCard label="MINER" value={block.miner ? truncateHash(block.miner, 10, 8) : 'unknown'} mono />
       </div>
 
-      {/* Prev hash */}
       {block.prevHash && (
         <div className="flex items-center gap-3 mb-3">
           <span className="text-xs text-[#4b5563]" style={{ fontFamily: '"Space Mono", monospace' }}>PREV</span>
@@ -79,7 +74,6 @@ export function BlockHeader({ block }: { block: Block }) {
         </div>
       )}
 
-      {/* Merkle root */}
       {block.merkleRoot && (
         <div className="flex items-center gap-3">
           <span className="text-xs text-[#4b5563]" style={{ fontFamily: '"Space Mono", monospace' }}>MERKLE</span>

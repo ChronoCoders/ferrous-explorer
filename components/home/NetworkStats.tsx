@@ -5,7 +5,7 @@ import { formatHashrate, formatDifficulty } from '@/lib/utils'
 
 interface Row {
   label: string
-  value: string | null   // null = loading
+  value: string | null
   mono?: boolean
   color?: string
   suffix?: string

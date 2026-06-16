@@ -11,7 +11,6 @@ export function SearchBar() {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  // Cmd/Ctrl+K
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -32,7 +31,6 @@ export function SearchBar() {
       } else if (isBlockHeight(trimmed)) {
         router.push(`/block/${trimmed}`)
       } else if (isTxOrBlockHash(trimmed)) {
-        // Could be block hash or txid — try block first
         router.push(`/block/${trimmed}`)
       }
       setQuery('')

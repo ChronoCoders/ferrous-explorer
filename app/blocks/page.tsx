@@ -38,7 +38,6 @@ function BlocksInner() {
         setData(json)
         setError(null)
       } catch (e) {
-        // Don't blow away a good view on a transient background failure
         if (!background) setError(String(e))
       } finally {
         if (!background) setLoading(false)
@@ -49,9 +48,6 @@ function BlocksInner() {
 
   useEffect(() => {
     load()
-    // Only page 1 polls for new blocks — historical pages stay static so the
-    // list doesn't shift while the user is reading. Background refreshes skip
-    // the skeleton so the list updates in place.
     if (page === 1) {
       const id = setInterval(() => load(true), 15000)
       return () => clearInterval(id)
@@ -65,7 +61,6 @@ function BlocksInner() {
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Breadcrumb */}
         <div
           className="flex items-center gap-2 text-xs text-[#4b5563] mb-4"
           style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
@@ -90,7 +85,6 @@ function BlocksInner() {
         </div>
 
         <div className="card overflow-hidden">
-          {/* Column headers */}
           <div
             className="hidden sm:flex items-center gap-4 px-4 py-2.5 border-b border-[#1e1e2a] text-xs text-[#4b5563] tracking-widest"
             style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
@@ -157,7 +151,6 @@ function BlocksInner() {
           )}
         </div>
 
-        {/* Pagination controls */}
         <div className="flex items-center justify-center gap-2 mt-6">
           <PageButton href="/blocks?page=1" disabled={!hasPrev} label="First page">
             <ChevronsLeft size={16} />

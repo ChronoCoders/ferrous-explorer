@@ -5,8 +5,8 @@ import { ComposedChart, Bar, Line, ReferenceLine, ResponsiveContainer, Tooltip, 
 
 interface BarDatum {
   height: number
-  interval: number   // seconds
-  avg: number        // trailing rolling mean
+  interval: number
+  avg: number
 }
 
 const ROLLING_WINDOW = 10
@@ -14,7 +14,7 @@ const ROLLING_WINDOW = 10
 type Range = '1H' | '6H' | '24H'
 
 const RANGE_BLOCKS: Record<Range, number> = {
-  '1H': 24,   // ~24 blocks/hour at 150s
+  '1H': 24,
   '6H': 144,
   '24H': 576,
 }
@@ -39,14 +39,13 @@ export function BlockTimeChart() {
     if (!mounted) return
 
     const load = async () => {
-      // Use cache to avoid re-fetching
       if (cache.current[range].length > 0) {
         setData(cache.current[range])
         return
       }
 
       try {
-        const count = RANGE_BLOCKS[range] + 1   // +1 to get one extra for interval calc
+        const count = RANGE_BLOCKS[range] + 1
         const res = await fetch(`/api/blocks?count=${Math.min(count, 50)}`)
         const json = await res.json()
         if (json.error || !json.blocks) return
@@ -156,7 +155,6 @@ export function BlockTimeChart() {
         </div>
       )}
 
-      {/* Legend */}
       <div className="flex items-center gap-4 mt-3">
         {[
           { color: '#4ade80', label: `${ROLLING_WINDOW}-blk avg` },

@@ -12,7 +12,6 @@ export function BlockList() {
   const [newHashes, setNewHashes] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  // Track hashes seen in previous fetch to identify genuinely new arrivals
   const prevHashesRef = useRef<Set<string>>(new Set())
 
   const load = useCallback(async () => {
@@ -22,7 +21,6 @@ export function BlockList() {
       if (data.error) throw new Error(data.error)
       const incoming: BlockSummary[] = data.blocks
 
-      // First render — all blocks are "known", no slide-in needed
       if (prevHashesRef.current.size === 0) {
         prevHashesRef.current = new Set(incoming.map((b) => b.hash))
         setBlocks(incoming)
@@ -31,7 +29,6 @@ export function BlockList() {
         return
       }
 
-      // Subsequent fetches — find blocks not seen before
       const fresh = new Set(
         incoming
           .filter((b) => !prevHashesRef.current.has(b.hash))
@@ -43,7 +40,6 @@ export function BlockList() {
       setNewHashes(fresh)
       setError(null)
 
-      // Clear the "new" marker after animation completes
       if (fresh.size > 0) {
         setTimeout(() => setNewHashes(new Set()), 800)
       }
@@ -93,7 +89,6 @@ export function BlockList() {
             return (
               <motion.div
                 key={block.hash}
-                // New blocks arrive at top — slide down from above
                 initial={isNew ? { opacity: 0, y: -20 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={

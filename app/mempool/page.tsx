@@ -41,7 +41,6 @@ export default function MempoolPage() {
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Breadcrumb */}
         <div
           className="flex items-center gap-2 text-xs text-[#4b5563] mb-4"
           style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
@@ -63,7 +62,6 @@ export default function MempoolPage() {
           </span>
         </div>
 
-        {/* Summary cards */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           {[
             { label: 'PENDING', value: loading ? null : (info?.count ?? txs.length).toLocaleString() },
@@ -88,7 +86,6 @@ export default function MempoolPage() {
           ))}
         </div>
 
-        {/* Transaction list */}
         <div className="card overflow-hidden">
           <div
             className="hidden sm:flex items-center gap-4 px-4 py-2.5 border-b border-[#1e1e2a] text-xs text-[#4b5563] tracking-widest"

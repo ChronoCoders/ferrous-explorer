@@ -13,11 +13,9 @@ export async function GET(req: Request) {
 
     const heights = Array.from({ length: Math.min(count, tip + 1) }, (_, i) => tip - i)
 
-    // Batch getblockhash
     const hashResults = await rpcBatch(heights.map((h) => ({ method: 'getblockhash', params: [h] })))
     const hashes = hashResults.filter(Boolean) as string[]
 
-    // Batch getblock verbose
     const blockResults = await rpcBatch(hashes.map((h) => ({ method: 'getblock', params: [h, true] })))
 
     const blocks = blockResults

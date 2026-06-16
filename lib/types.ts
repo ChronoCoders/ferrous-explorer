@@ -110,7 +110,7 @@ export interface MempoolTx {
   vsize: number
   vinCount: number
   voutCount: number
-  outputValue: number // total output value in frsats
+  outputValue: number
 }
 
 export interface MempoolInfo {

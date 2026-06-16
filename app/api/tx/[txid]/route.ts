@@ -11,12 +11,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ txid: s
     const tip = chainInfo.blocks
     const searchDepth = Math.min(tip, 100)
 
-    // Batch getblockhash for last searchDepth blocks
     const heights = Array.from({ length: searchDepth }, (_, i) => Math.max(0, tip - i))
     const hashResults = await rpcBatch(heights.map((h) => ({ method: 'getblockhash', params: [h] })))
     const hashes = hashResults.filter(Boolean) as string[]
 
-    // Fetch blocks verbose until we find the tx
     for (const blockHash of hashes) {
       const raw = (await rpcCall('getblock', [blockHash, true])) as any
       const txs: any[] = raw.transactions ?? []

@@ -38,7 +38,6 @@ export default function BroadcastPage() {
   return (
     <PageTransition>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        {/* Breadcrumb */}
         <div
           className="flex items-center gap-2 text-xs text-[#4b5563] mb-4"
           style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}

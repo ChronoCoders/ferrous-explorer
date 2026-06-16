@@ -3,9 +3,6 @@ import { rpcCall, rpcBatch, rpcCallAll } from '@/lib/rpc'
 
 export const dynamic = 'force-dynamic'
 
-// Genesis is excluded: its wire timestamp predates the chain (set when the
-// nonce was computed), so including it poisons the average on a young chain.
-// Returns null when fewer than 2 post-genesis blocks exist.
 async function computeAvgBlockTime(tipHeight: number): Promise<number | null> {
   const SAMPLE = 10
   if (tipHeight < 2) return null
@@ -39,16 +36,6 @@ async function computeAvgBlockTime(tipHeight: number): Promise<number | null> {
   return Math.round(intervals.reduce((s, v) => s + v, 0) / intervals.length)
 }
 
-// Average fee per non-coinbase tx over the last 10 blocks, in frsats.
-//
-// The node's verbose getblock exposes no per-input amounts, so the literal
-// Σinputs−Σoutputs per tx is not computable from RPC. The equivalent that IS
-// computable is fees = coinbase_output − block_subsidy (miners claim fees into
-// the coinbase). NOTE: the current Ferrous miner does NOT add fees to the
-// coinbase (every coinbase output is exactly the 50 FRR subsidy), so this
-// returns 0 today even when non-coinbase txs exist. The formula is correct and
-// forward-compatible: it begins reporting real fees the moment the miner claims
-// them. Returns 0 when there are no non-coinbase txs in the window.
 async function computeAvgFeeSats(tipHeight: number): Promise<number> {
   const SAMPLE = 10
   if (tipHeight < 1) return 0
@@ -106,16 +93,12 @@ export async function GET() {
       connections = netInfo.connections
     } catch {}
 
-    // Ask every node for getconnectioncount; count how many actually respond.
-    // nodes_online is 0, 1, or 2 — distinct from `connections` (peer count
-    // reported by the primary node).
     const connCounts = await rpcCallAll('getconnectioncount')
     const nodes_online = connCounts.filter((c) => c !== null).length
 
     const avg_block_time = await computeAvgBlockTime(chainInfo.blocks)
     const avg_fee_sats = await computeAvgFeeSats(chainInfo.blocks)
 
-    // Chain start = block 1's timestamp (genesis carries a stale pre-reset time).
     let chain_start: number | null = null
     if (chainInfo.blocks >= 1) {
       try {
@@ -125,11 +108,8 @@ export async function GET() {
       } catch {}
     }
 
-    // Circulating supply and blocks-until-next-halving, computed from height.
-    // BigInt() constructor (not literal `n` syntax) so this compiles at the
-    // project's ES2017 target.
     const ZERO = BigInt(0)
-    const INITIAL_REWARD = BigInt(5_000_000_000) // 50 FRR in frsats
+    const INITIAL_REWARD = BigInt(5_000_000_000)
     const HALVING_INTERVAL = BigInt(840_000)
     const height = BigInt(chainInfo.blocks)
 
@@ -149,13 +129,12 @@ export async function GET() {
     const supply = calculateSupply(height)
     const blocksToHalving = HALVING_INTERVAL - (height % HALVING_INTERVAL)
 
-    // Estimated next-block difficulty change (±1% retarget, inverse of target ratio).
     const BLOCK_TIME_TARGET = 150
     const targetRatio = Math.min(
       1.01,
       Math.max(0.99, (avg_block_time ?? BLOCK_TIME_TARGET) / BLOCK_TIME_TARGET)
     )
-    const estimated_adjustment = Number(((1 / targetRatio - 1) * 100).toFixed(2)) // % difficulty, next block
+    const estimated_adjustment = Number(((1 / targetRatio - 1) * 100).toFixed(2))
 
     return NextResponse.json({
       height: chainInfo.blocks,
@@ -168,12 +147,11 @@ export async function GET() {
       avg_block_time,
       supply_frr: Number(supply) / 100_000_000,
       blocks_to_halving: Number(blocksToHalving),
-      // RandomX epoch: key rotates every 2048 blocks (matches BlockHeader::epoch_key).
       epoch: Math.floor(chainInfo.blocks / 2048),
       epoch_progress: Math.round(((chainInfo.blocks % 2048) / 2048) * 100),
-      total_txs: chainInfo.blocks, // approximate: ≥1 coinbase tx per block
+      total_txs: chainInfo.blocks,
       avg_fee_sats,
-      estimated_adjustment, // signed % difficulty change estimated for the next block
+      estimated_adjustment,
       block_time_target: BLOCK_TIME_TARGET,
       chain_start,
     })

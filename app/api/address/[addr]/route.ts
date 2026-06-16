@@ -50,7 +50,6 @@ function bech32mEncode(hrp: string, data8: number[]): string {
   return hrp + '1' + [...data5, ...checksum].map((d) => CHARSET[d]).join('')
 }
 
-// P2DL scriptPubKey: 0xaa 0x20 <32-byte hash> 0x88 0xac (36 bytes) → bech32m address.
 function scriptPubkeyToAddress(hex: string, hrp: string): string | null {
   if (!/^[0-9a-fA-F]{72}$/.test(hex)) return null
   const bytes = Buffer.from(hex, 'hex')
@@ -64,7 +63,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ addr: s
   try {
     const hrp = addr.startsWith('frr1') ? 'frr' : 'tfrr'
 
-    // listunspent returns { utxos: [...] } whose entries carry script_pubkey, not address.
     const raw = (await rpcCall('listunspent')) as { utxos?: any[] } | any[]
     const list: any[] = Array.isArray(raw) ? raw : (raw?.utxos ?? [])
 
@@ -73,7 +71,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ addr: s
       .map((u: any) => ({
         txid: u.txid,
         vout: u.vout,
-        amount: Math.round((u.amount ?? u.value ?? 0) * 1e8), // FRR → frsats
+        amount: Math.round((u.amount ?? u.value ?? 0) * 1e8),
         height: u.height ?? 0,
         confirmations: u.confirmations ?? 0,
         coinbase: u.coinbase ?? false,

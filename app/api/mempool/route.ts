@@ -20,10 +20,6 @@ interface RawMempool {
 
 export async function GET() {
   try {
-    // Mempools are per-node — a tx submitted to one node (e.g. via txgen) is
-    // not necessarily relayed to the other before it's mined. Query EVERY node
-    // and union the results by txid so the page shows pending txs regardless of
-    // which node holds them. (rpcCall's failover would only ever see seed1.)
     const perNode = (await rpcCallAll('getrawmempool')) as (RawMempool | null)[]
 
     const byTxid = new Map<string, RawMempoolTx>()
@@ -51,7 +47,6 @@ export async function GET() {
       transactions,
     })
   } catch {
-    // All nodes unreachable / method missing — degrade to empty rather than error.
     return NextResponse.json({ count: 0, totalSize: 0, transactions: [] })
   }
 }

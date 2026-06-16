@@ -1,9 +1,3 @@
-// Minimal, dependency-free TopoJSON → SVG path conversion for the node map.
-// Decodes the vendored Natural Earth 110m countries TopoJSON (world-atlas v2)
-// and projects it equirectangularly into a 360×180 degree-space viewBox
-// (x = lon + 180, y = 90 - lat) — the same space NodeMap uses for its markers,
-// so HTML-overlaid pulse dots stay aligned. No d3 / topojson-client.
-
 import topoData from './countries-110m.json'
 
 interface Topology {
@@ -23,7 +17,6 @@ type Geometry = PolygonGeom | MultiPolygonGeom | { type: string }
 
 const topo = topoData as unknown as Topology
 
-// Dequantize delta-encoded arcs into absolute [lon, lat] coordinates.
 function decodeArcs(): [number, number][][] {
   const { scale, translate } = topo.transform
   return topo.arcs.map((arc) => {
@@ -39,8 +32,6 @@ function decodeArcs(): [number, number][][] {
 
 const ARCS = decodeArcs()
 
-// Stitch a ring's arc indices (negative => referenced arc, reversed) into points,
-// dropping the shared endpoint between consecutive arcs.
 function ringPoints(ring: number[]): [number, number][] {
   const pts: [number, number][] = []
   for (const idx of ring) {
@@ -61,14 +52,13 @@ function ringToPath(ring: number[]): string {
   if (pts.length < 2) return ''
   let d = ''
   for (let i = 0; i < pts.length; i++) {
-    const x = pts[i][0] + 180 // lon → [0, 360]
-    const y = 90 - pts[i][1] //  lat → [0, 180]
+    const x = pts[i][0] + 180
+    const y = 90 - pts[i][1]
     d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ',' + y.toFixed(2) + ' '
   }
   return d + 'Z'
 }
 
-// One SVG path string per polygon ring across all country geometries.
 export const COUNTRY_PATHS: string[] = (() => {
   const paths: string[] = []
   for (const g of topo.objects.countries.geometries) {

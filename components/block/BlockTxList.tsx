@@ -36,7 +36,6 @@ function TxRow({ tx }: { tx: Transaction }) {
 
       {expanded && (
         <div className="px-4 pb-4 grid sm:grid-cols-2 gap-4 bg-[#0d0d0f]">
-          {/* Inputs */}
           <div>
             <div className="text-xs text-[#4b5563] mb-2 tracking-widest" style={{ fontFamily: '"Space Mono", monospace' }}>
               INPUTS ({tx.inputs.length})
@@ -57,7 +56,6 @@ function TxRow({ tx }: { tx: Transaction }) {
             ))}
           </div>
 
-          {/* Outputs */}
           <div>
             <div className="text-xs text-[#4b5563] mb-2 tracking-widest" style={{ fontFamily: '"Space Mono", monospace' }}>
               OUTPUTS ({tx.outputs.length})

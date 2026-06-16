@@ -7,7 +7,6 @@ import type { Transaction } from '@/lib/types'
 export function TxHeader({ tx }: { tx: Transaction }) {
   return (
     <div>
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-[#4b5563] mb-6" style={{ fontFamily: '"Space Mono", monospace' }}>
         <Link href="/" className="hover:text-[#C0392B] transition-colors">HOME</Link>
         <span>/</span>
@@ -16,7 +15,6 @@ export function TxHeader({ tx }: { tx: Transaction }) {
         <span className="text-[#f0ede8]">{tx.txid.slice(0, 12)}...</span>
       </div>
 
-      {/* Title row */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <h1
           style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.06em' }}
@@ -35,7 +33,6 @@ export function TxHeader({ tx }: { tx: Transaction }) {
         )}
       </div>
 
-      {/* Full txid */}
       <div className="mb-6 p-3 rounded-lg bg-[#13131a] border border-[#1e1e2a] flex items-center justify-between gap-4">
         <div className="min-w-0">
           <div className="text-xs text-[#4b5563] mb-1" style={{ fontFamily: '"Space Mono", monospace' }}>TXID</div>
@@ -46,7 +43,6 @@ export function TxHeader({ tx }: { tx: Transaction }) {
         <CopyButton text={tx.txid} />
       </div>
 
-      {/* Meta row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { label: 'BLOCK HEIGHT', value: tx.blockHeight?.toLocaleString() ?? '—' },
@@ -65,7 +61,6 @@ export function TxHeader({ tx }: { tx: Transaction }) {
         ))}
       </div>
 
-      {/* Block link */}
       {tx.blockHash && (
         <div className="flex items-center gap-3">
           <span className="text-xs text-[#4b5563]" style={{ fontFamily: '"Space Mono", monospace' }}>BLOCK</span>

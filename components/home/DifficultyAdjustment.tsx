@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import type { ChainInfo } from '@/lib/types'
 
-// Ferrous retargets every block (±1%); shows the estimated next-block adjustment.
 export function DifficultyAdjustment() {
   const [stats, setStats] = useState<ChainInfo | null>(null)
 
@@ -15,9 +14,7 @@ export function DifficultyAdjustment() {
         if (!res.ok) return
         const d = (await res.json()) as ChainInfo
         if (active) setStats(d)
-      } catch {
-        /* keep last good data */
-      }
+      } catch {}
     }
     load()
     const id = setInterval(load, 15000)
@@ -31,9 +28,8 @@ export function DifficultyAdjustment() {
   const bt = stats?.avg_block_time ?? target
   const adj = stats?.estimated_adjustment ?? 0
 
-  const slow = bt > target // slow blocks → difficulty decreasing
+  const slow = bt > target
   const color = adj > 0.005 ? '#4ade80' : adj < -0.005 ? '#C0392B' : '#f0ede8'
-  // Gauge: deviation of block time from target, ±100% mapped to each half.
   const mag = Math.min(Math.abs((bt - target) / target), 1) * 50
 
   const ready = stats != null
@@ -56,11 +52,8 @@ export function DifficultyAdjustment() {
         </span>
       </div>
 
-      {/* Block-time-vs-target gauge */}
       <div className="relative h-2 rounded-full overflow-hidden" style={{ background: '#1a1a24' }}>
-        {/* target center marker */}
         <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: '#4b5563' }} />
-        {/* deviation fill from center */}
         {ready && (
           <div
             className="absolute inset-y-0"

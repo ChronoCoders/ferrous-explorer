@@ -42,7 +42,6 @@ export async function GET() {
       }
     }
 
-    // Already in descending block order from heights array
     return NextResponse.json({ transactions: txs.slice(0, 20) })
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 503 })

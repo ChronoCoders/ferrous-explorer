@@ -5,11 +5,6 @@ import { formatHashrate } from '@/lib/utils'
 import { COUNTRY_PATHS } from '@/lib/worldmap'
 import type { NodeInfo } from '@/lib/types'
 
-// Equirectangular projection into a 360×180 degree-space viewBox:
-//   x = lon + 180   (0 = 180°W … 360 = 180°E)
-//   y = 90 - lat    (0 = North pole … 180 = South pole)
-// Markers are HTML-overlaid by percentage so they stay circular even though the
-// SVG is stretched to fill the banner (preserveAspectRatio="none").
 const leftPct = (lon: number) => ((lon + 180) / 360) * 100
 const topPct = (lat: number) => ((90 - lat) / 180) * 100
 
@@ -27,9 +22,7 @@ export function NodeMap() {
         if (!res.ok) return
         const data = (await res.json()) as NodeInfo[]
         if (active) setNodes(data)
-      } catch {
-        /* keep last good data */
-      }
+      } catch {}
     }
     load()
     const id = setInterval(load, 15000)
@@ -52,14 +45,12 @@ export function NodeMap() {
         }
       `}</style>
 
-      {/* World map */}
       <svg
         className="absolute inset-0 h-full w-full"
         viewBox="0 0 360 180"
         preserveAspectRatio="none"
         style={{ background: '#0d0d0f' }}
       >
-        {/* faint lat/lon grid — sonar/terminal feel */}
         {GRID.map((x) => (
           <line key={`vx${x}`} x1={x} y1={0} x2={x} y2={180}
             stroke="rgba(240,237,232,0.03)" strokeWidth={0.3} />
@@ -68,7 +59,6 @@ export function NodeMap() {
           <line key={`hy${y}`} x1={0} y1={y} x2={360} y2={y}
             stroke="rgba(240,237,232,0.03)" strokeWidth={0.3} />
         ))}
-        {/* real Natural Earth coastlines (110m), equirectangular */}
         {COUNTRY_PATHS.map((d, i) => (
           <path key={i} d={d}
             fill="rgba(240,237,232,0.06)"
@@ -77,7 +67,6 @@ export function NodeMap() {
         ))}
       </svg>
 
-      {/* Title + count */}
       <div
         className="absolute left-4 top-3 z-10 text-[#6b7280]"
         style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace', fontSize: 11, letterSpacing: '0.18em' }}
@@ -91,14 +80,12 @@ export function NodeMap() {
         <span className="text-[#4ade80]">{online}</span> / {total} ONLINE
       </div>
 
-      {/* Node markers (HTML overlay) */}
       {nodes.map((n) => (
         <div
           key={n.id}
           className="group absolute z-10"
           style={{ left: `${leftPct(n.lon)}%`, top: `${topPct(n.lat)}%`, transform: 'translate(-50%,-50%)' }}
         >
-          {/* expanding pulse ring (online only) */}
           {n.online && (
             <span
               className="absolute left-1/2 top-1/2 rounded-full"
@@ -109,7 +96,6 @@ export function NodeMap() {
               }}
             />
           )}
-          {/* core dot */}
           <span
             className="relative block rounded-full"
             style={{
@@ -119,7 +105,6 @@ export function NodeMap() {
             }}
           />
 
-          {/* hover tooltip */}
           <div
             className="pointer-events-none absolute left-1/2 top-3 z-20 -translate-x-1/2 whitespace-nowrap rounded-md px-3 py-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
             style={{

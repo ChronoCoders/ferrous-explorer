@@ -35,9 +35,9 @@ function AnimatedHeight({ value }: { value: number }) {
 }
 
 function blockTimeColor(secs: number): string {
-  if (secs < 100) return '#4ade80'   // green — faster than target
-  if (secs <= 180) return '#f0ede8'  // white — normal range
-  return '#C0392B'                    // rust — slow
+  if (secs < 100) return '#4ade80'
+  if (secs <= 180) return '#f0ede8'
+  return '#C0392B'
 }
 
 function formatHalvingEta(seconds: number): string {
@@ -63,7 +63,6 @@ export function StatsBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-stretch overflow-x-auto">
 
-          {/* HEIGHT */}
           <StatCell label="HEIGHT" loading={loading}>
             <div className="flex items-center gap-2">
               {!loading && (
@@ -73,7 +72,6 @@ export function StatsBar() {
             </div>
           </StatCell>
 
-          {/* HASHRATE */}
           <StatCell label="HASHRATE" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -81,7 +79,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* DIFFICULTY */}
           <StatCell label="DIFFICULTY" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -89,7 +86,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* BLOCK TIME — color-coded vs 150s target */}
           <StatCell label="BLOCK TIME" loading={loading}>
             <div className="flex items-baseline gap-1.5">
               <span
@@ -109,7 +105,6 @@ export function StatsBar() {
             </div>
           </StatCell>
 
-          {/* PEERS */}
           <StatCell label="PEERS" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -117,7 +112,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* SUPPLY */}
           <StatCell label="SUPPLY" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -125,7 +119,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* NEXT HALVING */}
           <StatCell label="NEXT HALVING" loading={loading}
             sub={stats ? formatHalvingEta(stats.blocks_to_halving * (stats.avg_block_time || 150)) : undefined}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
@@ -134,7 +127,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* EPOCH — RandomX key rotates every 2048 blocks */}
           <StatCell label="EPOCH" loading={loading}>
             <div className="flex items-baseline gap-1.5">
               <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
@@ -150,7 +142,6 @@ export function StatsBar() {
             </div>
           </StatCell>
 
-          {/* TX COUNT — approximate (≥1 coinbase tx per block) */}
           <StatCell label="TXS" loading={loading}>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -158,7 +149,6 @@ export function StatsBar() {
             </span>
           </StatCell>
 
-          {/* AVG FEE */}
           <StatCell label="AVG FEE" loading={loading} rightDivider>
             <span style={{ fontFamily: 'var(--font-mono, "Space Mono"), monospace' }}
               className="text-sm font-medium text-[#f0ede8]">
@@ -187,8 +177,6 @@ function StatCell({
   divider?: boolean
   rightDivider?: boolean
 }) {
-  // Variant D separators: inset (56%-height, centered) neutral dividers as pseudo-elements.
-  // Every cell draws a left divider (::before); the last cell also draws a right one (::after).
   const dividerCls = divider
     ? " before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-px before:h-[56%] before:bg-[rgba(240,237,232,0.12)]"
     : ''

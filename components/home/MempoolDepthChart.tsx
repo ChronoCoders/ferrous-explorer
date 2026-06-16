@@ -44,9 +44,7 @@ export function MempoolDepthChart() {
         countBuffer.current = push(countBuffer.current, d.count ?? 0)
         sizeBuffer.current = push(sizeBuffer.current, d.totalSize ?? 0)
         setVersion((v) => v + 1)
-      } catch {
-        /* keep last good buffers */
-      }
+      } catch {}
     }
     tick()
     const id = setInterval(tick, 15000)
@@ -59,7 +57,6 @@ export function MempoolDepthChart() {
   const curSize = sizes.length ? sizes[sizes.length - 1] : 0
   const minSize = sizes.length ? Math.min(...sizes) : 0
   const maxSize = sizes.length ? Math.max(...sizes) : 0
-  // Each series normalized independently (secondary Y axis for size).
   const countPath = buildPath(counts)
   const sizePath = buildPath(sizes)
 

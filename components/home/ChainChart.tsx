@@ -25,9 +25,8 @@ const META: Record<ChartTab, { title: string; color: string; fmt: (v: number) =>
 export function ChainChart() {
   const [activeTab, setActiveTab] = useState<ChartTab>('hashrate')
   const [mounted, setMounted] = useState(false)
-  const [, setVersion] = useState(0) // force re-render when buffers grow
+  const [, setVersion] = useState(0)
 
-  // Separate buffers per series, all fed from the same /api/chain poll.
   const hashrateBuffer = useRef<number[]>([])
   const blocktimeBuffer = useRef<number[]>([])
   const difficultyBuffer = useRef<number[]>([])
@@ -47,9 +46,7 @@ export function ChainChart() {
         if (d.avg_block_time != null) blocktimeBuffer.current = push(blocktimeBuffer.current, d.avg_block_time)
         if (d.difficulty != null) difficultyBuffer.current = push(difficultyBuffer.current, d.difficulty)
         setVersion((v) => v + 1)
-      } catch {
-        /* keep last good buffers */
-      }
+      } catch {}
     }
 
     tick()
@@ -67,8 +64,6 @@ export function ChainChart() {
 
   const current = data.length > 0 ? data[data.length - 1] : 0
 
-  // Normalize to the 80px height. For block time, fold the 150s target into the
-  // range so the dashed target line is always on-chart.
   const scaleVals = activeTab === 'blocktime' ? [...data, BLOCK_TIME_TARGET] : data
   const min = scaleVals.length ? Math.min(...scaleVals) : 0
   const max = scaleVals.length ? Math.max(...scaleVals) : 1
@@ -83,7 +78,6 @@ export function ChainChart() {
 
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-      {/* Title row */}
       <div className="flex items-center justify-between" style={{ padding: '12px 16px' }}>
         <h2
           style={{ fontFamily: 'var(--font-display, "Bebas Neue"), sans-serif', fontSize: '1.1rem', letterSpacing: '0.08em' }}
@@ -120,7 +114,6 @@ export function ChainChart() {
         </div>
       </div>
 
-      {/* Chart — exactly 80px */}
       <div style={{ height: SVG_H, overflow: 'hidden' }}>
         {!mounted || path === null ? (
           <div className="skeleton" style={{ height: SVG_H, width: '100%' }} />
